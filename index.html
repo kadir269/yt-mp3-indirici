@@ -226,6 +226,20 @@
                 <button class="btn-primary" id="searchBtn" onclick="searchVideo()">Ara</button>
             </div>
             
+            <div class="video-info" id="videoInfo">
+                <img id="thumbnail" src="" alt="Thumbnail">
+                <h4 id="title"></h4>
+                <p id="uploader"></p>
+                <p id="duration"></p>
+                <button class="btn-primary" id="downloadBtn" onclick="downloadVideo()" style="margin-top: 1rem; width: 100%;">MP3 İndir</button>
+            </div>
+            
+            <div class="message" id="message"></div>
+        </div>
+        
+        <div class="card">
+            <h3>📖 Nasıl İndirilir?</h3>
+            
             <div class="cookie-section">
                 <h3>🍪 Çerez Dosyası (Zorunlu)</h3>
                 <p>Çerez yüklemelisiniz, çerezsiz çalışmaz:</p>
@@ -237,15 +251,26 @@
                 <div class="cookie-status not-loaded" id="cookieStatus">Çerez yüklenmedi (zorunlu)</div>
             </div>
             
-            <div class="video-info" id="videoInfo">
-                <img id="thumbnail" src="" alt="Thumbnail">
-                <h4 id="title"></h4>
-                <p id="uploader"></p>
-                <p id="duration"></p>
-                <button class="btn-primary" id="downloadBtn" onclick="downloadVideo()" style="margin-top: 1rem; width: 100%;">MP3 İndir</button>
-            </div>
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">💻 Bilgisayar İçin Çerez Alma:</h4>
+            <ol style="margin-left: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
+                <li style="margin-bottom: 0.5rem;"><a href="https://chrome.google.com/webstore" target="_blank" style="color: #00d4ff; text-decoration: none;">Chrome Web Store</a>'dan "Get cookies.txt LOCALLY" eklentisini indir</li>
+                <li style="margin-bottom: 0.5rem;">YouTube'a git ve oturum aç</li>
+                <li style="margin-bottom: 0.5rem;">Eklenti ikonuna tıkla</li>
+                <li style="margin-bottom: 0.5rem;">"Export" → "cookies.txt" indir</li>
+                <li style="margin-bottom: 0.5rem;">Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                <li style="margin-bottom: 0.5rem;">cookies.txt dosyasını seç</li>
+            </ol>
             
-            <div class="message" id="message"></div>
+            <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">📱 Telefon İçin Çerez Alma:</h4>
+            <ol style="margin-left: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
+                <li style="margin-bottom: 0.5rem;"><a href="https://play.google.com/store" target="_blank" style="color: #00d4ff; text-decoration: none;">Google Play Store</a>'dan "Cookie Editor" uygulamasını indir</li>
+                <li style="margin-bottom: 0.5rem;">YouTube uygulamasını aç ve oturum aç</li>
+                <li style="margin-bottom: 0.5rem;">Cookie Editor uygulamasını aç</li>
+                <li style="margin-bottom: 0.5rem;">YouTube çerezlerini dışa aktar</li>
+                <li style="margin-bottom: 0.5rem;">Dosyayı bilgisayara gönder</li>
+                <li style="margin-bottom: 0.5rem;">Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                <li style="margin-bottom: 0.5rem;">Dosyayı seç</li>
+            </ol>
         </div>
     </div>
     
