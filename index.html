@@ -363,7 +363,8 @@
                 
                 <div class="modal-buttons">
                     <button class="modal-btn active" id="computerBtn" onclick="showComputer()">💻 Bilgisayar</button>
-                    <button class="modal-btn" id="phoneBtn" onclick="showPhone()">📱 Telefon</button>
+                    <button class="modal-btn" id="androidBtn" onclick="showAndroid()">📱 Android</button>
+                    <button class="modal-btn" id="iosBtn" onclick="showIOS()">🍎 iOS</button>
                 </div>
                 
                 <div id="computerContent">
@@ -378,10 +379,23 @@
                     </ol>
                 </div>
                 
-                <div id="phoneContent" style="display: none;">
-                    <h4>📱 Telefon İçin Çerez Alma:</h4>
+                <div id="androidContent" style="display: none;">
+                    <h4>📱 Android İçin Çerez Alma:</h4>
                     <ol>
                         <li><a href="https://play.google.com/store" target="_blank">Google Play Store</a>'dan "Cookie Editor" uygulamasını indir</li>
+                        <li>YouTube uygulamasını aç ve oturum aç</li>
+                        <li>Cookie Editor uygulamasını aç</li>
+                        <li>YouTube çerezlerini dışa aktar</li>
+                        <li>Dosyayı bilgisayara gönder</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>Dosyayı seç</li>
+                    </ol>
+                </div>
+                
+                <div id="iosContent" style="display: none;">
+                    <h4>🍎 iOS İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://apps.apple.com" target="_blank">App Store</a>'dan "Cookie Editor" uygulamasını indir</li>
                         <li>YouTube uygulamasını aç ve oturum aç</li>
                         <li>Cookie Editor uygulamasını aç</li>
                         <li>YouTube çerezlerini dışa aktar</li>
@@ -582,16 +596,29 @@
         
         function showComputer() {
             document.getElementById('computerContent').style.display = 'block';
-            document.getElementById('phoneContent').style.display = 'none';
+            document.getElementById('androidContent').style.display = 'none';
+            document.getElementById('iosContent').style.display = 'none';
             document.getElementById('computerBtn').classList.add('active');
-            document.getElementById('phoneBtn').classList.remove('active');
+            document.getElementById('androidBtn').classList.remove('active');
+            document.getElementById('iosBtn').classList.remove('active');
         }
         
-        function showPhone() {
+        function showAndroid() {
             document.getElementById('computerContent').style.display = 'none';
-            document.getElementById('phoneContent').style.display = 'block';
+            document.getElementById('androidContent').style.display = 'block';
+            document.getElementById('iosContent').style.display = 'none';
             document.getElementById('computerBtn').classList.remove('active');
-            document.getElementById('phoneBtn').classList.add('active');
+            document.getElementById('androidBtn').classList.add('active');
+            document.getElementById('iosBtn').classList.remove('active');
+        }
+        
+        function showIOS() {
+            document.getElementById('computerContent').style.display = 'none';
+            document.getElementById('androidContent').style.display = 'none';
+            document.getElementById('iosContent').style.display = 'block';
+            document.getElementById('computerBtn').classList.remove('active');
+            document.getElementById('androidBtn').classList.remove('active');
+            document.getElementById('iosBtn').classList.add('active');
         }
         
         // Modal dışına tıklayınca kapat
