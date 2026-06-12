@@ -220,15 +220,15 @@
         
         <div class="info-box">
             <h3>🔒 Güvenlik Notu</h3>
-            <p>Bu site frontend-only çalışır. Çerez gerektirmez, çerezsiz çalışır.</p>
+            <p>Bu site frontend-only çalışır. Çerez gereklidir, çerezsiz çalışmaz.</p>
             <ul>
-                <li>Çerezsiz çalışır</li>
+                <li>Çerez zorunlu</li>
                 <li>Çerezler sadece tarayıcınızda saklanır</li>
                 <li>Backend yok, sunucuya veri gönderilmez</li>
                 <li>Risk yok, tamamen güvenli</li>
             </ul>
-            <h3 style="margin-top: 1rem;">🍪 Çerez Kullanımı (Opsiyonel)</h3>
-            <p>YouTube engelini aşmak için çerez kullanabilirsiniz:</p>
+            <h3 style="margin-top: 1rem;">🍪 Çerez Kullanımı (Zorunlu)</h3>
+            <p>YouTube engelini aşmak için çerez kullanmalısınız:</p>
             <ul>
                 <li><strong>Eklenti İndir:</strong> Chrome Web Store'dan "Get cookies.txt LOCALLY" eklentisini indir</li>
                 <li><strong>Çerez Al:</strong> YouTube'a git, eklenti ikonuna tıkla, "Export" → "cookies.txt" indir</li>
@@ -245,14 +245,14 @@
             </div>
             
             <div class="cookie-section">
-                <h3>🍪 Çerez Dosyası (Opsiyonel)</h3>
-                <p>Çerezsiz çalışır. Sadece bazı videolarda gerekebilir:</p>
+                <h3>🍪 Çerez Dosyası (Zorunlu)</h3>
+                <p>Çerez yüklemelisiniz, çerezsiz çalışmaz:</p>
                 <div class="input-group">
                     <input type="file" id="cookieFile" accept=".txt" style="display: none;">
                     <button class="btn-secondary" onclick="document.getElementById('cookieFile').click()">📁 Çerez Yükle</button>
                     <button class="btn-secondary" onclick="clearCookies()">🗑️ Çerezleri Sil</button>
                 </div>
-                <div class="cookie-status not-loaded" id="cookieStatus">Çerez yüklenmedi (opsiyonel)</div>
+                <div class="cookie-status not-loaded" id="cookieStatus">Çerez yüklenmedi (zorunlu)</div>
             </div>
             
             <div class="video-info" id="videoInfo">
@@ -339,6 +339,11 @@
                 return;
             }
             
+            if (!cookies) {
+                showMessage('Çerez yüklemelisiniz (zorunlu)', 'error');
+                return;
+            }
+            
             const videoId = extractVideoId(url);
             if (!videoId) {
                 showMessage('Geçersiz YouTube URL', 'error');
@@ -384,6 +389,11 @@
         async function downloadVideo() {
             if (!currentUrl) {
                 showMessage('Önce video arayın', 'error');
+                return;
+            }
+            
+            if (!cookies) {
+                showMessage('Çerez yüklemelisiniz (zorunlu)', 'error');
                 return;
             }
             
