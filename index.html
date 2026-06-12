@@ -262,8 +262,10 @@
         let currentUrl = '';
         let cookies = '';
         
-        // CORS Proxy URL
-        const CORS_PROXY = 'https://corsproxy.io/?';
+        // RapidAPI Configuration
+        const RAPIDAPI_KEY = 'f1e7e258bfmsh408e813bdd0b2acp12cc97jsn62b477cd4760';
+        const RAPIDAPI_HOST = 'youtube-mp36.p.rapidapi.com';
+        const RAPIDAPI_URL = `https://${RAPIDAPI_HOST}/dl`;
         
         // Sayfa yüklendiğinde çerezleri kontrol et
         window.onload = function() {
@@ -316,10 +318,21 @@
             }, 5000);
         }
         
+        function extractVideoId(url) {
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return match ? match[1] : null;
+        }
+
         async function searchVideo() {
             const url = document.getElementById('urlInput').value.trim();
             if (!url) {
                 showMessage('URL girin', 'error');
+                return;
+            }
+            
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                showMessage('Geçersiz YouTube URL', 'error');
                 return;
             }
             
@@ -329,27 +342,27 @@
             btn.textContent = 'Aranıyor...';
             
             try {
-                // Cobalt.tools API kullan (CORS proxy ile)
-                const response = await fetch(CORS_PROXY + encodeURIComponent('https://cobalt.tools/api/json'), {
-                    method: 'POST',
+                // RapidAPI kullan
+                const response = await fetch(`${RAPIDAPI_URL}?id=${videoId}`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ url: url })
+                        'x-rapidapi-host': RAPIDAPI_HOST,
+                        'x-rapidapi-key': RAPIDAPI_KEY
+                    }
                 });
                 
                 const data = await response.json();
                 
-                if (data.status === 'success') {
+                if (data.link) {
                     document.getElementById('thumbnail').src = data.thumbnail || '';
                     document.getElementById('title').textContent = data.title || 'Bilinmeyen Video';
-                    document.getElementById('uploader').textContent = data.uploader || 'Bilinmeyen';
+                    document.getElementById('uploader').textContent = data.author || 'Bilinmeyen';
                     document.getElementById('duration').textContent = formatDuration(data.duration);
                     document.getElementById('videoInfo').classList.add('show');
                     showMessage('Video bulundu!', 'success');
                 } else {
-                    showMessage('Video bulunamadı: ' + (data.text || 'Bilinmeyen hata'), 'error');
+                    showMessage('Video bulunamadı', 'error');
                 }
             } catch (error) {
                 showMessage('Hata: ' + error.message, 'error');
@@ -365,38 +378,38 @@
                 return;
             }
             
+            const videoId = extractVideoId(currentUrl);
+            if (!videoId) {
+                showMessage('Geçersiz YouTube URL', 'error');
+                return;
+            }
+            
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
             btn.textContent = 'İndiriliyor...';
             
             try {
-                // Cobalt.tools API kullan (CORS proxy ile)
-                const response = await fetch(CORS_PROXY + encodeURIComponent('https://cobalt.tools/api/json'), {
-                    method: 'POST',
+                // RapidAPI kullan
+                const response = await fetch(`${RAPIDAPI_URL}?id=${videoId}`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: currentUrl,
-                        vCodec: 'h264',
-                        vQuality: 'max',
-                        aFormat: 'mp3',
-                        filenamePattern: 'classic'
-                    })
+                        'x-rapidapi-host': RAPIDAPI_HOST,
+                        'x-rapidapi-key': RAPIDAPI_KEY
+                    }
                 });
                 
                 const data = await response.json();
                 
-                if (data.status === 'success' && data.url) {
+                if (data.link) {
                     const a = document.createElement('a');
-                    a.href = data.url;
-                    a.download = data.filename || 'audio.mp3';
+                    a.href = data.link;
+                    a.download = data.title || 'audio.mp3';
                     a.target = '_blank';
                     a.click();
                     showMessage('İndirme başlatıldı!', 'success');
                 } else {
-                    showMessage('İndirme başarısız: ' + (data.text || 'Bilinmeyen hata'), 'error');
+                    showMessage('İndirme başarısız', 'error');
                 }
             } catch (error) {
                 showMessage('Hata: ' + error.message, 'error');
