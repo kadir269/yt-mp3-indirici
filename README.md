@@ -32,23 +32,6 @@ Modern, güvenli ve frontend-only YouTube'dan MP3 indirme uygulaması. Backend y
 
 ## 📖 Nasıl Kullanılır?
 
-### Çerez Dosyası Alma (YouTube Engelini Aşmak İçin)
-
-1. **Chrome Eklentisi Kur:**
-   - "Get cookies.txt LOCALLY" eklentisini kur
-   - [Chrome Web Store](https://chrome.google.com/webstore) adresinden indir
-
-2. **Çerez Dışa Aktar:**
-   - YouTube'a git ve oturum aç
-   - Eklenti ikonuna tıkla
-   - "Export" → "cookies.txt" indir
-
-3. **Sitede Çerez Yükle:**
-   - Siteyi aç
-   - "📁 Çerez Yükle" butonuna tıkla
-   - cookies.txt dosyasını seç
-   - Çerezler localStorage'da saklanır
-
 ### Video İndirme
 
 1. **URL Girin:** YouTube video URL'sini yapıştırın

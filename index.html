@@ -222,10 +222,19 @@
             <h3>🔒 Güvenlik Notu</h3>
             <p>Bu site frontend-only çalışır. Çerez gerektirmez, çerezsiz çalışır.</p>
             <ul>
-                <li>Çerezsiz çalışır (Cobalt.tools API)</li>
+                <li>Çerezsiz çalışır</li>
                 <li>Çerezler sadece tarayıcınızda saklanır</li>
                 <li>Backend yok, sunucuya veri gönderilmez</li>
                 <li>Risk yok, tamamen güvenli</li>
+            </ul>
+            <h3 style="margin-top: 1rem;">🍪 Çerez Kullanımı (Opsiyonel)</h3>
+            <p>YouTube engelini aşmak için çerez kullanabilirsiniz:</p>
+            <ul>
+                <li><strong>Eklenti İndir:</strong> Chrome Web Store'dan "Get cookies.txt LOCALLY" eklentisini indir</li>
+                <li><strong>Çerez Al:</strong> YouTube'a git, eklenti ikonuna tıkla, "Export" → "cookies.txt" indir</li>
+                <li><strong>Siteye Yükle:</strong> "📁 Çerez Yükle" butonuna tıkla, cookies.txt dosyasını seç</li>
+                <li><strong>Güvenlik:</strong> Çerezler sadece sizin tarayıcınızda kalır, siteye gönderilmez</li>
+                <li><strong>Risk Yok:</strong> Çerezler çalsa bile sadece Google hesabınız risk altında, site güvende</li>
             </ul>
         </div>
         
@@ -235,6 +244,16 @@
                 <button class="btn-primary" id="searchBtn" onclick="searchVideo()">Ara</button>
             </div>
             
+            <div class="cookie-section">
+                <h3>🍪 Çerez Dosyası (Opsiyonel)</h3>
+                <p>Çerezsiz çalışır. Sadece bazı videolarda gerekebilir:</p>
+                <div class="input-group">
+                    <input type="file" id="cookieFile" accept=".txt" style="display: none;">
+                    <button class="btn-secondary" onclick="document.getElementById('cookieFile').click()">📁 Çerez Yükle</button>
+                    <button class="btn-secondary" onclick="clearCookies()">🗑️ Çerezleri Sil</button>
+                </div>
+                <div class="cookie-status not-loaded" id="cookieStatus">Çerez yüklenmedi (opsiyonel)</div>
+            </div>
             
             <div class="video-info" id="videoInfo">
                 <img id="thumbnail" src="" alt="Thumbnail">
@@ -250,11 +269,54 @@
     
     <script>
         let currentUrl = '';
+        let cookies = '';
         
         // RapidAPI Configuration
         const RAPIDAPI_KEY = 'f1e7e258bfmsh408e813bdd0b2acp12cc97jsn62b477cd4760';
-        const RAPIDAPI_HOST = 'super-fast-youtube-to-mp3-and-mp4-converter.p.rapidapi.com';
-        const RAPIDAPI_URL = `https://${RAPIDAPI_HOST}/`;
+        const RAPIDAPI_HOST = 'youtube-mp36.p.rapidapi.com';
+        const RAPIDAPI_URL = `https://${RAPIDAPI_HOST}/dl`;
+        
+        // Sayfa yüklendiğinde çerezleri kontrol et
+        window.onload = function() {
+            const savedCookies = localStorage.getItem('youtube_cookies');
+            if (savedCookies) {
+                cookies = savedCookies;
+                updateCookieStatus(true);
+            }
+        };
+        
+        // Çerez dosyası yükle
+        document.getElementById('cookieFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    cookies = e.target.result;
+                    localStorage.setItem('youtube_cookies', cookies);
+                    updateCookieStatus(true);
+                    showMessage('Çerezler başarıyla yüklendi!', 'success');
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        function updateCookieStatus(loaded) {
+            const status = document.getElementById('cookieStatus');
+            if (loaded) {
+                status.textContent = '✅ Çerezler yüklendi';
+                status.className = 'cookie-status loaded';
+            } else {
+                status.textContent = '❌ Çerez yüklenmedi';
+                status.className = 'cookie-status not-loaded';
+            }
+        }
+        
+        function clearCookies() {
+            cookies = '';
+            localStorage.removeItem('youtube_cookies');
+            updateCookieStatus(false);
+            showMessage('Çerezler silindi', 'success');
+        }
         
         function showMessage(text, type) {
             const msg = document.getElementById('message');
@@ -277,6 +339,12 @@
                 return;
             }
             
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                showMessage('Geçersiz YouTube URL', 'error');
+                return;
+            }
+            
             currentUrl = url;
             const btn = document.getElementById('searchBtn');
             btn.disabled = true;
@@ -284,7 +352,7 @@
             
             try {
                 // RapidAPI kullan
-                const response = await fetch(`${RAPIDAPI_URL}?url=${encodeURIComponent(url)}`, {
+                const response = await fetch(`${RAPIDAPI_URL}?id=${videoId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -295,7 +363,7 @@
                 
                 const data = await response.json();
                 
-                if (data && data.title) {
+                if (data.link) {
                     document.getElementById('thumbnail').src = data.thumbnail || '';
                     document.getElementById('title').textContent = data.title || 'Bilinmeyen Video';
                     document.getElementById('uploader').textContent = data.author || 'Bilinmeyen';
@@ -319,13 +387,19 @@
                 return;
             }
             
+            const videoId = extractVideoId(currentUrl);
+            if (!videoId) {
+                showMessage('Geçersiz YouTube URL', 'error');
+                return;
+            }
+            
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
             btn.textContent = 'İndiriliyor...';
             
             try {
                 // RapidAPI kullan
-                const response = await fetch(`${RAPIDAPI_URL}?url=${encodeURIComponent(currentUrl)}`, {
+                const response = await fetch(`${RAPIDAPI_URL}?id=${videoId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -336,7 +410,7 @@
                 
                 const data = await response.json();
                 
-                if (data && data.link) {
+                if (data.link) {
                     const a = document.createElement('a');
                     a.href = data.link;
                     a.download = data.title || 'audio.mp3';
