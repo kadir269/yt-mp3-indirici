@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube MP3 İndirici - Güvenli</title>
-    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -213,6 +213,108 @@
         .info-box li {
             margin-bottom: 0.25rem;
         }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d4ff;
+        }
+        
+        .modal-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+        
+        .modal-content h4 {
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+        
+        .modal-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content li {
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .modal-content a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -251,26 +353,44 @@
                 <div class="cookie-status not-loaded" id="cookieStatus">Çerez yüklenmedi (zorunlu)</div>
             </div>
             
-            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">💻 Bilgisayar İçin Çerez Alma:</h4>
-            <ol style="margin-left: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
-                <li style="margin-bottom: 0.5rem;"><a href="https://chrome.google.com/webstore" target="_blank" style="color: #00d4ff; text-decoration: none;">Chrome Web Store</a>'dan "Get cookies.txt LOCALLY" eklentisini indir</li>
-                <li style="margin-bottom: 0.5rem;">YouTube'a git ve oturum aç</li>
-                <li style="margin-bottom: 0.5rem;">Eklenti ikonuna tıkla</li>
-                <li style="margin-bottom: 0.5rem;">"Export" → "cookies.txt" indir</li>
-                <li style="margin-bottom: 0.5rem;">Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
-                <li style="margin-bottom: 0.5rem;">cookies.txt dosyasını seç</li>
-            </ol>
-            
-            <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">📱 Telefon İçin Çerez Alma:</h4>
-            <ol style="margin-left: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
-                <li style="margin-bottom: 0.5rem;"><a href="https://play.google.com/store" target="_blank" style="color: #00d4ff; text-decoration: none;">Google Play Store</a>'dan "Cookie Editor" uygulamasını indir</li>
-                <li style="margin-bottom: 0.5rem;">YouTube uygulamasını aç ve oturum aç</li>
-                <li style="margin-bottom: 0.5rem;">Cookie Editor uygulamasını aç</li>
-                <li style="margin-bottom: 0.5rem;">YouTube çerezlerini dışa aktar</li>
-                <li style="margin-bottom: 0.5rem;">Dosyayı bilgisayara gönder</li>
-                <li style="margin-bottom: 0.5rem;">Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
-                <li style="margin-bottom: 0.5rem;">Dosyayı seç</li>
-            </ol>
+            <button class="btn-primary" onclick="openModal()" style="margin-top: 1rem; width: 100%;">� Çerez Alma Talimatları</button>
+        </div>
+        
+        <div class="modal" id="cookieModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">×</button>
+                <h3 style="margin-bottom: 1.5rem;">🍪 Çerez Alma Talimatları</h3>
+                
+                <div class="modal-buttons">
+                    <button class="modal-btn active" id="computerBtn" onclick="showComputer()">💻 Bilgisayar</button>
+                    <button class="modal-btn" id="phoneBtn" onclick="showPhone()">📱 Telefon</button>
+                </div>
+                
+                <div id="computerContent">
+                    <h4>💻 Bilgisayar İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://chrome.google.com/webstore" target="_blank">Chrome Web Store</a>'dan "Get cookies.txt LOCALLY" eklentisini indir</li>
+                        <li>YouTube'a git ve oturum aç</li>
+                        <li>Eklenti ikonuna tıkla</li>
+                        <li>"Export" → "cookies.txt" indir</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>cookies.txt dosyasını seç</li>
+                    </ol>
+                </div>
+                
+                <div id="phoneContent" style="display: none;">
+                    <h4>📱 Telefon İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://play.google.com/store" target="_blank">Google Play Store</a>'dan "Cookie Editor" uygulamasını indir</li>
+                        <li>YouTube uygulamasını aç ve oturum aç</li>
+                        <li>Cookie Editor uygulamasını aç</li>
+                        <li>YouTube çerezlerini dışa aktar</li>
+                        <li>Dosyayı bilgisayara gönder</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>Dosyayı seç</li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -451,6 +571,35 @@
             const secs = Math.floor(seconds % 60);
             return `${mins}:${String(secs).padStart(2, '0')}`;
         }
+        
+        function openModal() {
+            document.getElementById('cookieModal').classList.add('show');
+        }
+        
+        function closeModal() {
+            document.getElementById('cookieModal').classList.remove('show');
+        }
+        
+        function showComputer() {
+            document.getElementById('computerContent').style.display = 'block';
+            document.getElementById('phoneContent').style.display = 'none';
+            document.getElementById('computerBtn').classList.add('active');
+            document.getElementById('phoneBtn').classList.remove('active');
+        }
+        
+        function showPhone() {
+            document.getElementById('computerContent').style.display = 'none';
+            document.getElementById('phoneContent').style.display = 'block';
+            document.getElementById('computerBtn').classList.remove('active');
+            document.getElementById('phoneBtn').classList.add('active');
+        }
+        
+        // Modal dışına tıklayınca kapat
+        document.getElementById('cookieModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
