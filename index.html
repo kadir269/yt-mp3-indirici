@@ -315,6 +315,81 @@
         .modal-content a:hover {
             text-decoration: underline;
         }
+        
+        .ad-sidebar {
+            position: fixed;
+            top: 0;
+            width: 320px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0;
+            z-index: 100;
+        }
+        
+        .ad-sidebar.left {
+            left: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ad-sidebar.right {
+            right: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ad-sidebar iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .adblock-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .adblock-overlay.show {
+            display: flex;
+        }
+        
+        .adblock-overlay h2 {
+            font-size: 2rem;
+            color: #ff4444;
+            margin-bottom: 1rem;
+        }
+        
+        .adblock-overlay p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        .adblock-overlay button {
+            padding: 1rem 2rem;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .adblock-overlay button:hover {
+            background: #00ff88;
+        }
     </style>
 </head>
 <body>
@@ -364,6 +439,39 @@
         <div style="text-align: center; margin-top: 2rem; font-size: 0.75rem; color: rgba(255, 255, 255, 0.5);">
             <p>⚠️ Tüm kullanım kullanıcıya aittir. Bu site sadece eğitim amaçlıdır. YouTube'un kullanım şartlarına uyunuz.</p>
         </div>
+    </div>
+    
+    <div class="ad-sidebar left">
+        <script>
+          atOptions = {
+            'key' : '85680d81e4ccc60035e20aa881dff5b8',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/85680d81e4ccc60035e20aa881dff5b8/invoke.js"></script>
+    </div>
+    
+    <div class="ad-sidebar right">
+        <script>
+          atOptions = {
+            'key' : '85680d81e4ccc60035e20aa881dff5b8',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/85680d81e4ccc60035e20aa881dff5b8/invoke.js"></script>
+    </div>
+    
+    <div class="adblock-overlay" id="adblockOverlay">
+        <h2>⚠️ Reklam Engelleyici Tespit Edildi</h2>
+        <p>Bu site reklamlarla çalışır. Lütfen reklam engelleyiciyi devre dışı bırakın ve sayfayı yenileyin.</p>
+        <button onclick="location.reload()">Sayfayı Yenile</button>
+    </div>
         
         <div class="modal" id="cookieModal">
             <div class="modal-content">
@@ -425,15 +533,6 @@
         const RAPIDAPI_KEY = 'f1e7e258bfmsh408e813bdd0b2acp12cc97jsn62b477cd4760';
         const RAPIDAPI_HOST = 'youtube-mp36.p.rapidapi.com';
         const RAPIDAPI_URL = `https://${RAPIDAPI_HOST}/dl`;
-        
-        // Sayfa yüklendiğinde çerezleri kontrol et
-        window.onload = function() {
-            const savedCookies = localStorage.getItem('youtube_cookies');
-            if (savedCookies) {
-                cookies = savedCookies;
-                updateCookieStatus(true);
-            }
-        };
         
         // Çerez dosyası yükle
         document.getElementById('cookieFile').addEventListener('change', function(e) {
@@ -595,6 +694,31 @@
             return `${mins}:${String(secs).padStart(2, '0')}`;
         }
         
+        // Reklam engelleyici tespiti
+        function detectAdblock() {
+            const adTest = document.createElement('div');
+            adTest.innerHTML = '&nbsp;';
+            adTest.className = 'adsbox';
+            document.body.appendChild(adTest);
+            
+            window.setTimeout(function() {
+                if (adTest.offsetHeight === 0) {
+                    document.getElementById('adblockOverlay').classList.add('show');
+                }
+                adTest.remove();
+            }, 100);
+        }
+        
+        // Sayfa yüklendiğinde reklam engelleyici kontrolü
+        window.onload = function() {
+            const savedCookies = localStorage.getItem('youtube_cookies');
+            if (savedCookies) {
+                cookies = savedCookies;
+                updateCookieStatus(true);
+            }
+            detectAdblock();
+        };
+        
         function openModal(type) {
             document.getElementById('cookieModal').classList.add('show');
             if (type === 'computer') {
@@ -644,6 +768,5 @@
             }
         });
     </script>
-    <script src="https://pl29727602.effectivecpmnetwork.com/44/db/c3/44dbc3a177c66b0c73fac97bd44fc0af.js"></script>
 </body>
 </html>
