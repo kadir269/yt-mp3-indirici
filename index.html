@@ -213,6 +213,108 @@
         .info-box li {
             margin-bottom: 0.25rem;
         }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d4ff;
+        }
+        
+        .modal-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+        
+        .modal-content h4 {
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+        
+        .modal-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content li {
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .modal-content a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -253,9 +355,60 @@
             
             <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">🍪 Çerez Alma Talimatları:</h4>
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="computer.html" class="btn-secondary" style="text-align: center; text-decoration: none;">💻 Bilgisayar</a>
-                <a href="android.html" class="btn-secondary" style="text-align: center; text-decoration: none;">📱 Android</a>
-                <a href="ios.html" class="btn-secondary" style="text-align: center; text-decoration: none;">🍎 iOS</a>
+                <button class="btn-secondary" onclick="openModal()" style="text-align: center;">💻 Bilgisayar</button>
+                <button class="btn-secondary" onclick="openModal()" style="text-align: center;">📱 Android</button>
+                <button class="btn-secondary" onclick="openModal()" style="text-align: center;">🍎 iOS</button>
+            </div>
+        </div>
+        
+        <div class="modal" id="cookieModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">×</button>
+                <h3 style="margin-bottom: 1.5rem;">🍪 Çerez Alma Talimatları</h3>
+                
+                <div class="modal-buttons">
+                    <button class="modal-btn active" id="computerBtn" onclick="showComputer()">💻 Bilgisayar</button>
+                    <button class="modal-btn" id="androidBtn" onclick="showAndroid()">📱 Android</button>
+                    <button class="modal-btn" id="iosBtn" onclick="showIOS()">🍎 iOS</button>
+                </div>
+                
+                <div id="computerContent">
+                    <h4>💻 Bilgisayar İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkihmfpbakpobdenm" target="_blank">"Get cookies.txt LOCALLY"</a> eklentisini indir</li>
+                        <li>YouTube'a git ve oturum aç</li>
+                        <li>Eklenti ikonuna tıkla</li>
+                        <li>"Export" → "cookies.txt" indir</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>cookies.txt dosyasını seç</li>
+                    </ol>
+                </div>
+                
+                <div id="androidContent" style="display: none;">
+                    <h4>📱 Android İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://play.google.com/store/apps/details?id=org.cookieeditor" target="_blank">"Cookie Editor"</a> uygulamasını indir</li>
+                        <li>YouTube uygulamasını aç ve oturum aç</li>
+                        <li>Cookie Editor uygulamasını aç</li>
+                        <li>YouTube çerezlerini dışa aktar</li>
+                        <li>Dosyayı bilgisayara gönder</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>Dosyayı seç</li>
+                    </ol>
+                </div>
+                
+                <div id="iosContent" style="display: none;">
+                    <h4>🍎 iOS İçin Çerez Alma:</h4>
+                    <ol>
+                        <li><a href="https://apps.apple.com/app/cookie-editor/id1444667835" target="_blank">"Cookie Editor"</a> uygulamasını indir</li>
+                        <li>YouTube uygulamasını aç ve oturum aç</li>
+                        <li>Cookie Editor uygulamasını aç</li>
+                        <li>YouTube çerezlerini dışa aktar</li>
+                        <li>Dosyayı bilgisayara gönder</li>
+                        <li>Yukarıdaki "📁 Çerez Yükle" butonuna tıkla</li>
+                        <li>Dosyayı seç</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>
@@ -437,6 +590,48 @@
             const secs = Math.floor(seconds % 60);
             return `${mins}:${String(secs).padStart(2, '0')}`;
         }
+        
+        function openModal() {
+            document.getElementById('cookieModal').classList.add('show');
+        }
+        
+        function closeModal() {
+            document.getElementById('cookieModal').classList.remove('show');
+        }
+        
+        function showComputer() {
+            document.getElementById('computerContent').style.display = 'block';
+            document.getElementById('androidContent').style.display = 'none';
+            document.getElementById('iosContent').style.display = 'none';
+            document.getElementById('computerBtn').classList.add('active');
+            document.getElementById('androidBtn').classList.remove('active');
+            document.getElementById('iosBtn').classList.remove('active');
+        }
+        
+        function showAndroid() {
+            document.getElementById('computerContent').style.display = 'none';
+            document.getElementById('androidContent').style.display = 'block';
+            document.getElementById('iosContent').style.display = 'none';
+            document.getElementById('computerBtn').classList.remove('active');
+            document.getElementById('androidBtn').classList.add('active');
+            document.getElementById('iosBtn').classList.remove('active');
+        }
+        
+        function showIOS() {
+            document.getElementById('computerContent').style.display = 'none';
+            document.getElementById('androidContent').style.display = 'none';
+            document.getElementById('iosContent').style.display = 'block';
+            document.getElementById('computerBtn').classList.remove('active');
+            document.getElementById('androidBtn').classList.remove('active');
+            document.getElementById('iosBtn').classList.add('active');
+        }
+        
+        // Modal dışına tıklayınca kapat
+        document.getElementById('cookieModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
